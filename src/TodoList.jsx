@@ -1,15 +1,24 @@
 import BriefcaseSVG from "./images/briefcase.svg";
 import { FormControlLabel } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Checkbox from "@mui/material/Checkbox";
 import { useState } from "react";
 
-const Todo = ({ index, title, isDone, handleCheck }) => {
+const Todo = ({ index, title, isDone, handleCheck, handleDelete }) => {
   const [checked, setChecked] = useState(isDone);
 
   return (
-    <div className="mt-3">
+    <div className="mt-3 flex justify-between">
       <FormControlLabel
-        label={<span className={checked ? "line-through" : ""}>{title}</span>}
+        className="overflow-hidden"
+        label={
+          <span
+            className={(checked ? "line-through " : "") + "whitespace-nowrap"}
+          >
+            {title}
+          </span>
+        }
         control={
           <Checkbox
             checked={checked}
@@ -20,11 +29,14 @@ const Todo = ({ index, title, isDone, handleCheck }) => {
           />
         }
       />
+      <IconButton aria-label="delete" color="error" onClick={() => handleDelete(index)}>
+        <DeleteIcon />
+      </IconButton>
     </div>
   );
 };
 
-const TodoList = ({ todosList, title, todoHandleCheck }) => {
+const TodoList = ({ todosList, title, todoHandleCheck, todoHandleDelete }) => {
   return (
     <div>
       <div className="flex items-end">
@@ -32,9 +44,18 @@ const TodoList = ({ todosList, title, todoHandleCheck }) => {
         <h2 className="text-3xl ml-5">{title}</h2>
       </div>
       <div className="bg-white p-3 pl-5 mt-5 rounded-xl">
-        {todosList.map((todo, index) => (
-          <Todo title={todo.title} isDone={todo.isDone} key={index} index={index} handleCheck={todoHandleCheck}/>
-        ))}
+        {todosList[0]
+          ? todosList.map((todo, index) => (
+              <Todo
+                title={todo.title}
+                isDone={todo.isDone}
+                key={index}
+                index={index}
+                handleCheck={todoHandleCheck}
+                handleDelete={todoHandleDelete}
+              />
+            ))
+          : "You dont have any work to do!"}
       </div>
     </div>
   );
